@@ -55,7 +55,12 @@ app.post("/api/persons/", (request, response) => {
 
     if(!body.name || !body.number)
     {
-       return response.status(400).json({error: "content missing",});
+       return response.status(400).json({error: "Both name and number are needed to add a new entry",});
+    }
+
+    if(entries.find(entry => entry.name === body.name))
+    {
+        return response.status(400).json({error: "The name already exists in the phonebook",});
     }
 
     const entry = {
