@@ -26,13 +26,26 @@ let entries = [
     }
 ];
 
+app.get("/info", (request, response) => {
+    response.send(`<p>Phonebook has info for ${entries.length} people</p><p>${new Date()}</p>`);
+})
+
 app.get("/api/persons", (request, response) => {
   response.json(entries);
 });
 
-app.get("/info", (request, response) => {
-    response.send(`<p>Phonebook has info for ${entries.length} people</p><p>${new Date()}</p>`);
-})
+app.get("/api/persons/:id", (request, response) => {
+  const id = request.params.id;
+  const entry = entries.find((entry) => entry.id === id);
+
+  if (entry) {
+    response.json(entry);
+  } else {
+    response.status(404).end();
+  }
+});
+
+
 
 const PORT = 3001;
 app.listen(PORT, () => {
