@@ -45,6 +45,30 @@ app.get("/api/persons/:id", (request, response) => {
   }
 });
 
+const generateId = () => {
+    const maxId = entries.length > 0 ? Math.max(...entries.map(n => Number(n.id))) : 0;
+    return String(Math.random()*1000000)
+}
+
+app.post("/api/persons/", (request, response) => {
+    const body = request.body
+
+    if(!body.name || !body.number)
+    {
+       return response.status(400).json({error: "content missing",});
+    }
+
+    const entry = {
+        id: generateId(),
+        name: body.name,
+        number: body.number
+    } 
+
+    entries = entries.concat(entry);
+
+    response.json(entry);
+})
+
 app.delete("/api/persons/:id", (request, response) => {
   const id = request.params.id;
   entries = entries.filter((entry) => entry.id !== id);
