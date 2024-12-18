@@ -5,6 +5,8 @@ if (process.argv.length < 3) {
   process.exit(1);
 }
 
+// Just testing push to source control, delete later
+
 const password = process.argv[2];
 
 const url = `mongodb+srv://phonebook-read-write:${password}@cluster0.vngt9eu.mongodb.net/PhonebookApp?retryWrites=true&w=majority&appName=Cluster0`;
