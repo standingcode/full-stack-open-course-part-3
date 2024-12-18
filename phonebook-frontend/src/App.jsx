@@ -38,11 +38,11 @@ const App = () => {
 
         noteService
           .update(existingPerson.id, updatePersonObject)
-          .then((responseDataObject) => {
+          .then((response) => {
             setPersons(
               persons
                 .filter((person) => person.id !== existingPerson.id)
-                .concat(responseDataObject)
+                .concat(response.data)
             );
 
             setinformationMessage(
@@ -62,7 +62,7 @@ const App = () => {
               );
             } else {
               setErrorMessage(
-                `Something went wrong with the update for '${newName}': ${error}`
+                `Something went wrong with the update for '${newName}' ${error.response.data.error}`
               );
             }
 
@@ -89,8 +89,8 @@ const App = () => {
 
     noteService
       .create(newNameObject)
-      .then((newContactFromServer) => {
-        setPersons(persons.concat(newContactFromServer));
+      .then((response) => {
+        setPersons(persons.concat(response.data));
 
         setinformationMessage(
           `'${newName}' was added with the number ${newNumber}`
@@ -104,7 +104,7 @@ const App = () => {
       })
       .catch((error) => {
         setErrorMessage(
-          `The contact '${newName}' could not be added: ${error}`
+          `The contact '${newName}' could not be added ${error.response.data.error}`
         );
         setTimeout(() => {
           setErrorMessage(null);
@@ -133,7 +133,7 @@ const App = () => {
             `'${nameOfPersonToBeDeleted}' was deleted from the phonebook`
           );
 
-          setPersons(persons.filter(person => person.id !== id ))
+          setPersons(persons.filter((person) => person.id !== id));
 
           setTimeout(() => {
             setinformationMessage(null);
@@ -157,8 +157,8 @@ const App = () => {
   useEffect(() => {
     noteService
       .getAll()
-      .then((initialData) => {
-        setPersons(initialData);
+      .then((response) => {
+        setPersons(response.data);
       })
       .catch((error) => {
         setErrorMessage(`The list of contacts could not be loaded: ${error}`);
