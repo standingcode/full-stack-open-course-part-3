@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for phonebook-standingcode on 2024-12-18T11:23:45+02:00
+# fly.toml app configuration file generated for phonebook-standingcode on 2024-12-18T13:57:09+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -9,7 +9,7 @@ primary_region = 'arn'
 [build]
 
 [env]
- PORT = "3000" # add this
+  PORT = '3000'
 
 [http_service]
   internal_port = 3000
