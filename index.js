@@ -60,7 +60,7 @@ app.get("/api/persons", (request, response) => {
     });
 });
 
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/:id", (request, response, next) => {
   return Person.findById({ _id: request.params.id })
     .then((person) => {
       if (person) {
@@ -69,9 +69,7 @@ app.get("/api/persons/:id", (request, response) => {
         response.status(404).end();
       }
     })
-    .catch((error) => {
-      return response.status(500).end();
-    });
+    .catch((error) => next(error));
 });
 
 app.put("/api/persons/:id", (request, response) => {
@@ -94,7 +92,9 @@ app.put("/api/persons/:id", (request, response) => {
           .then((person) => {
             response.json(person);
           })
-          .catch((error) => {});
+          .catch((error) => {
+            console.log(error);
+          });
       } else {
         const message = "The user to update was not found in the database";
         console.log(message);
@@ -106,9 +106,7 @@ app.put("/api/persons/:id", (request, response) => {
         "Failure attempting to get single person from the database";
 
       console.log(message);
-      return response.status(500).json({
-        error: message,
-      });
+      response.status(400).send({ error: error });
     });
 });
 
@@ -151,7 +149,19 @@ const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
 };
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+
 app.use(unknownEndpoint);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
