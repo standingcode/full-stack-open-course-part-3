@@ -29,7 +29,7 @@ const personSchema = new mongoose.Schema({
       validator: function(v) {
         return /\d[2-3]-\d/.test(v)
       },
-      message: props => `${props.value} is not a valid phone number!`
+      message: props => `${props.value} is not a valid phone number! Numbers must be formed of 2 or 3 numbers, followed by a dash, followed by numbers.`
     },
   },
 })
