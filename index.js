@@ -28,7 +28,7 @@ app.use(
   })
 );
 
-app.get("/info", (request, response) => {
+app.get("/info", (request, response, next) => {
   Person.find({})
     .then((people) => {
       people.forEach((person) => {
@@ -40,13 +40,10 @@ app.get("/info", (request, response) => {
         } people</p><p>${new Date()}</p>`
       );
     })
-    .catch((error) => {
-      console.log(error);
-      response.send("Could not count the users");
-    });
+    .catch((error) => next(error));
 });
 
-app.get("/api/persons", (request, response) => {
+app.get("/api/persons", (request, response, next) => {
   Person.find({})
     .then((people) => {
       people.forEach((person) => {
@@ -55,9 +52,7 @@ app.get("/api/persons", (request, response) => {
 
       response.json(people);
     })
-    .catch((error) => {
-      console.log(error);
-    });
+    .catch((error) => next(error));
 });
 
 app.get("/api/persons/:id", (request, response, next) => {
@@ -72,7 +67,7 @@ app.get("/api/persons/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-app.put("/api/persons/:id", (request, response) => {
+app.put("/api/persons/:id", (request, response, next) => {
   console.log(request.body);
   const body = request.body;
 
@@ -82,35 +77,19 @@ app.put("/api/persons/:id", (request, response) => {
       .json({ error: "Number is needed to update an entry" });
   }
 
-  Person.findById(request.params.id)
-    .then((person) => {
-      if (person) {
-        person.number = body.number;
+  const person = {
+    name: body.name,
+    number: body.number,
+  };
 
-        person
-          .save()
-          .then((person) => {
-            response.json(person);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      } else {
-        const message = "The user to update was not found in the database";
-        console.log(message);
-        return response.status(404).json({ error: message });
-      }
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      response.json(updatedPerson);
     })
-    .catch((error) => {
-      const message =
-        "Failure attempting to get single person from the database";
-
-      console.log(message);
-      response.status(400).send({ error: error });
-    });
+    .catch((error) => next(error));
 });
 
-app.post("/api/persons/", (request, response) => {
+app.post("/api/persons/", (request, response, next) => {
   const body = request.body;
 
   if (!body.name || !body.number) {
@@ -129,20 +108,15 @@ app.post("/api/persons/", (request, response) => {
     .then((person) => {
       response.json(person);
     })
-    .catch((error) => {
-      console.log("Could not save new person");
-      return response.status(400).json({ error: "Could not save new person" });
-    });
+    .catch((error) => next(error));
 });
 
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/api/persons/:id", (request, response, next) => {
   Person.findByIdAndDelete({ _id: request.params.id })
     .then(() => {
       response.status(204).end();
     })
-    .catch((error) => {
-      response.status(204).end();
-    });
+    .catch((error) => next(error));
 });
 
 const unknownEndpoint = (request, response) => {
