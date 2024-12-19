@@ -96,17 +96,19 @@ app.put("/api/persons/:id", (request, response) => {
           })
           .catch((error) => {});
       } else {
-        console.log("The updated user could not be saved");
-        return response
-          .status(400)
-          .json({ error: "The updated user could not be saved" });
+        const message = "The user to update was not found in the database";
+        console.log(message);
+        return response.status(404).json({ error: message });
       }
     })
     .catch((error) => {
-      console.log("Could not get person by id");
-      return response
-        .status(400)
-        .json({ error: "A current user could not be found with this id" });
+      const message =
+        "Failure attempting to get single person from the database";
+
+      console.log(message);
+      return response.status(500).json({
+        error: message,
+      });
     });
 });
 
