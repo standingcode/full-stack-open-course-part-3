@@ -136,7 +136,7 @@ app.post("/api/persons/", (request, response) => {
 });
 
 app.delete("/api/persons/:id", (request, response) => {
-  Person.deleteOne({ _id: request.params.id })
+  Person.findByIdAndDelete({ _id: request.params.id })
     .then(() => {
       response.status(204).end();
     })
