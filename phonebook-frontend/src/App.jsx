@@ -61,9 +61,7 @@ const App = () => {
                 persons.filter((person) => person.id !== existingPerson.id)
               );
             } else {
-              setErrorMessage(
-                `Something went wrong with the update for '${newName}' ${error.response.data.error}`
-              );
+              setErrorMessage(error.response.data.error);
             }
 
             setTimeout(() => {
@@ -103,9 +101,7 @@ const App = () => {
         setNewNumber("");
       })
       .catch((error) => {
-        setErrorMessage(
-          `The contact '${newName}' could not be added ${error.response.data.error}`
-        );
+        setErrorMessage(error.response.data.error);
         setTimeout(() => {
           setErrorMessage(null);
         }, 5000);
