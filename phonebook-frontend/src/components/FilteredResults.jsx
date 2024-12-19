@@ -1,3 +1,4 @@
+import { skipMiddlewareFunction } from "mongoose";
 import DisplayResults from "./DisplayResults.jsx";
 
 const FilteredResults = ({ persons, filter, deleteCallback }) => {
@@ -9,9 +10,14 @@ const FilteredResults = ({ persons, filter, deleteCallback }) => {
     persons = [];
   }
 
-  const filteredPersons = persons.filter((person) =>
-    person.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  const filteredPersons =
+    filter === ""
+      ? persons
+      : persons.filter((person) => {
+          if (person.name) {
+            person.name.toLowerCase().includes(filter.toLowerCase());
+          }
+        });
 
   return (
     <DisplayResults

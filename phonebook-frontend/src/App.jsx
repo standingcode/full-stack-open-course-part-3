@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import FilteredResults from "./components/FilteredResults";
 import AddUserForm from "./components/AddUserForm";
 import FilterSearchBox from "./components/FilterSearchBox";
-import noteService from "./services/Persons";
+import personService from "./services/Persons";
 import Notification from "./components/Notifications";
 
 const App = () => {
@@ -36,7 +36,7 @@ const App = () => {
       ) {
         const updatePersonObject = { ...existingPerson, number: newNumber };
 
-        noteService
+        personService
           .update(existingPerson.id, updatePersonObject)
           .then((response) => {
             setPersons(
@@ -87,7 +87,7 @@ const App = () => {
       number: newNumber,
     };
 
-    noteService
+    personService
       .create(newNameObject)
       .then((response) => {
         setPersons(persons.concat(response.data));
@@ -122,7 +122,7 @@ const App = () => {
         `Are you sure you want to delete ${nameOfPersonToBeDeleted}`
       )
     ) {
-      noteService
+      personService
         .remove(id)
         .then((deletedPersonObject) => {
           setPersons(
@@ -155,7 +155,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    noteService
+    personService
       .getAll()
       .then((response) => {
         setPersons(response.data);
