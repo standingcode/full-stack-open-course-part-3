@@ -15,10 +15,9 @@ const FilteredResults = ({ persons, filter, deleteCallback }) => {
       ? persons
       : persons.filter((person) => {
           if (person.name) {
-            person.name.toLowerCase().includes(filter.toLowerCase());
+            return person.name.toLowerCase().includes(filter.toLowerCase());
           }
         });
-
   return (
     <DisplayResults
       key={"persons"}
